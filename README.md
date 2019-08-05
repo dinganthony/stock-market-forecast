@@ -1,2 +1,2 @@
 # sentiment-analyzer
-A personal project exploring the Naive Bayes Classifier I learned about in my Artificial Intelligence course
+A personal project exploring the Naive Bayes Classifier covered in CS188 (Intro to AI @ Berkeley)!

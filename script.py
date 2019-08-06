@@ -1,0 +1,1 @@
+'''script.py contains the main running block for sentiment analysis'''

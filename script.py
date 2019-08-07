@@ -7,7 +7,7 @@ DATA_FILE = 'Combined_News_DJIA.csv'
 TYPE = 'NaiveBayes'
 
 def main(clf_type):
-    test_headline = "rise."
+    test_headline = "plummet"
     print("Headline: ", test_headline)
     if clf_type == 'NaiveBayes':
         classifier = models.NaiveBayesClassifier(DATA_FILE, alpha=0.5)

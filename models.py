@@ -5,6 +5,7 @@ import numpy as np
 from nltk.corpus import stopwords
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score
 import tensorflow as tf
@@ -30,9 +31,9 @@ class SentimentClassifier:
         reader = csv.reader(stock_data)
         self.data = self.preprocess_data(reader)
         self.file = file
-        if self.debug:
-            print("Preprocessed data:")
-            print(self.data)
+        #if self.debug:
+        #   print("Preprocessed data:")
+        #    print(self.data)
         self.create_model()
 
     def preprocess_data(self, reader):
@@ -52,10 +53,10 @@ of each other, to classify stock market movement.'''
 class NaiveBayesClassifier(SentimentClassifier):
 
     def __init__(self, file, debug=DEBUG_MODE, alpha=NB_ALPHA):
-        super.__init__(file, debug)
-        self.alpha = alpha
         self.vocabulary = set()
-
+        self.alpha = alpha
+        SentimentClassifier.__init__(self, file, debug)
+        
     # TODO: y values should be ints not strings when read from CSV
     def preprocess_data(self, reader):
         x_words = []
@@ -67,11 +68,10 @@ class NaiveBayesClassifier(SentimentClassifier):
                 first_row_header = False
                 continue
             y_values.append(row[1])
-            words_in_row = []
+            combined_headline = ''
             for headline in row[2:]:
-                words = self.create_vocabulary(headline)
-                words_in_row.extend(words)
-            x_words.append(words_in_row)
+                combined_headline += self.create_vocabulary(headline)
+            x_words.append(combined_headline)
         return (x_words, y_values)
                 
     def create_vocabulary(self, text):
@@ -83,15 +83,14 @@ class NaiveBayesClassifier(SentimentClassifier):
         for word in words:
             if word not in stop:
                 self.vocabulary.add(word)
-        self.vocabulary = words
-        return words
+        return text
 
     def create_model(self):
         # Split data into sets for training and testing
         x_train, x_test, y_train, y_test =\
             train_test_split(self.data[0], self.data[1], test_size=0.2)
         # Use tfidf to vectorize data
-        tfidfv = TfidfVectorizer(max_features=TFIDF_FEATURES)
+        tfidfv = TfidfVectorizer(tokenizer=None, max_features=TFIDF_FEATURES)
         tfidfv.fit(self.vocabulary)
         self.tfidf_vocab = tfidfv.vocabulary
         self.tfidfv = tfidfv
@@ -106,9 +105,8 @@ class NaiveBayesClassifier(SentimentClassifier):
             print("Testing classifier accuracy:", accuracy_score(self.testing, y_test) * 100)
     
     def classify(self, text):
-        words = self.create_vocabulary(text)
-        words = self.tfidfv.transform(words)
-        return self.nb.predict(words)
+        text = self.tfidfv.transform([text])
+        return self.nb.predict(text)
 
 
 '''These classifiers are a work in progress and will be implemented after the NaiveBayesClassifier.'''

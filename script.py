@@ -7,7 +7,7 @@ DATA_FILE = 'Combined_News_DJIA.csv'
 TYPE = 'NaiveBayes'
 
 def main(clf_type):
-    test_headline = "Oil prices fall in Kuwait."
+    test_headline = "rise."
     print("Headline: ", test_headline)
     if clf_type == 'NaiveBayes':
         classifier = models.NaiveBayesClassifier(DATA_FILE, alpha=0.5)
@@ -18,10 +18,10 @@ def main(clf_type):
     else:
         raise ValueError("Not a valid classifier type.")
     label = classifier.classify(test_headline)
-    if label:
-        print("Prediction: market will fall")
+    if label == '1':
+        print("Predicted rise")
     else:
-        print("Prediction: market will rise")
+        print('Predicted fall')
     
 if __name__ == "__main__":
     main(TYPE)

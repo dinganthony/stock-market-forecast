@@ -16,7 +16,7 @@ from matplotlib import pyplot as plt
 # Constants
 DEBUG_MODE = True
 NB_ALPHA = 1.0
-TFIDF_FEATURES = 10000
+TFIDF_FEATURES = 100000000
 
 '''The base SentimentClassifier class contains core logic 
 for different models of stock classifiers.'''
